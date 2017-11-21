@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/DataDog/dd-trace-go/config"
+	"github.com/DataDog/dd-trace-go/opentracing"
 	"github.com/gin-gonic/gin"
 	"github.com/opentracing/opentracing-go"
 
@@ -9,6 +11,15 @@ import (
 )
 
 func main() {
+	// configure Datadog Tracer
+	cfg := &Configuration{
+		ServiceName: "api-intake",
+	}
+
+	tracer, closer, err := NewDatadogTracer(cfg)
+	defer closer.Close()
+	opentracing.SetGlobalTracer(tracer)
+
 	// define the application router
 	router := gin.Default()
 	router.Use(TracingMiddleware())
