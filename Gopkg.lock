@@ -3,6 +3,13 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/DataDog/dd-trace-go"
+  packages = ["opentracing","tracer","tracer/ext"]
+  revision = "6525d4617e792d29e2cf9dafed0fd46629ed54d5"
+  source = "github.com/DataDog/dd-trace-go"
+
+[[projects]]
+  branch = "master"
   name = "github.com/gin-contrib/sse"
   packages = ["."]
   revision = "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae"
@@ -32,22 +39,21 @@
   version = "v1.0.2"
 
 [[projects]]
-  branch = "master"
   name = "github.com/ugorji/go"
   packages = ["codec"]
-  revision = "a437b1adc2d23f710b6cebba4e8081c9469374d6"
+  revision = "9c7f9b7a2bc3a520f7c7b30b34b7f85f47fe27b6"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "9dfe39835686865bff950a07b394c12a98ddc811"
+  revision = "a8b9294777976932365dabb6640cf1468d95c70f"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix"]
-  revision = "328643532ee3c60c099171d4ce2cad0ca0354ca9"
+  packages = ["unix","windows"]
+  revision = "8b4580aae2a0dd0c231a45d3ccb8434ff533b840"
 
 [[projects]]
   name = "gopkg.in/go-playground/validator.v8"
@@ -64,6 +70,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "91fc8f4720abaffacaa315b3aa6415c74c76a07a320cf77ffa35be16e8060085"
+  inputs-digest = "7afe5986b2985bd30dbdb9ae8989c02a831472772c4d98aadcd5eca788f1b7bf"
   solver-name = "gps-cdcl"
   solver-version = 1
