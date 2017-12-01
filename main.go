@@ -1,8 +1,7 @@
 package main
 
 import (
-	"github.com/DataDog/dd-trace-go/config"
-	"github.com/DataDog/dd-trace-go/opentracing"
+	datadog "github.com/DataDog/dd-trace-go/opentracing"
 	"github.com/gin-gonic/gin"
 	"github.com/opentracing/opentracing-go"
 
@@ -12,11 +11,10 @@ import (
 
 func main() {
 	// configure Datadog Tracer
-	cfg := &Configuration{
-		ServiceName: "api-intake",
-	}
+	config := datadog.NewConfiguration()
+	config.ServiceName = "api-intake"
 
-	tracer, closer, err := NewDatadogTracer(cfg)
+	tracer, closer, _ := datadog.NewTracer(config)
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
 
