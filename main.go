@@ -5,8 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/opentracing/opentracing-go"
 
+	"context"
 	"net/http"
 	"strconv"
+	"sync"
+	"time"
 )
 
 func main() {
@@ -27,14 +30,38 @@ func main() {
 }
 
 func getAccount(ctx *gin.Context) {
+	var wg sync.WaitGroup
+
 	id := ctx.Param("id")
 
 	// add some context to the Trace (if the Span is available)
-	if span := opentracing.SpanFromContext(ctx.Request.Context()); span != nil {
+	span := opentracing.SpanFromContext(ctx.Request.Context())
+	if span != nil {
 		span.SetTag("account_id", id)
 	}
 
+	template := opentracing.StartSpan("template.rendering", opentracing.ChildOf(span.Context()))
+	defer template.Finish()
+
+	context := opentracing.ContextWithSpan(ctx.Request.Context(), template)
+	for i := 0; i < 2; i++ {
+		wg.Add(1)
+		go dbCall(context, &wg)
+	}
+
+	wg.Wait()
 	ctx.String(http.StatusOK, "Account details for: %s", id)
+}
+
+func dbCall(context context.Context, wg *sync.WaitGroup) {
+	parent := opentracing.SpanFromContext(context)
+	db := opentracing.StartSpan("db.query", opentracing.ChildOf(parent.Context()))
+	db.SetTag("resource.name", "SELECT * FROM users;")
+	db.SetTag("service.name", "db-cluster")
+	defer db.Finish()
+
+	time.Sleep(20 * time.Microsecond)
+	wg.Done()
 }
 
 func TracingMiddleware() gin.HandlerFunc {
